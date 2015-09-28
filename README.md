@@ -1,22 +1,34 @@
-The library provide :
+Fork of [davidB](https://github.com/davidB/metrics-influxdb) library enabling support for InfluxDB v0.9.1+
+
+The library provide
 
 * a lighter client than influxdb-java to push only series to an [InfluxDB](http://influxdb.org) server.
 * A reporter for [metrics](http://metrics.codahale.com/) which announces measurements.
 
 The library provide a lighter client than influxdb-java to push only metrics.
 
-## Dependencies :
+## Dependencies
 
 * slf4j-api for logging.
 * metrics-core, to provide, if you use InfluxdbReporter.
 
-## Usage sample :
-
+## Usage samples
+```java
 	private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) throws Exception {
-		final InfluxdbHttp influxdb = new InfluxdbHttp("127.0.0.1", 8086, "mydb", "user", "pass"); // http transport
-		// = new InfluxDbUdp("127.0.0.1", 1234); // udp transport
-		//influxdb.debugJson = true; // to print json on System.err
-		//influxdb.jsonBuilder = new MyJsonBuildler(); // to use MyJsonBuilder to create json
+		InfluxdbHttpConfig config = new InfluxdbHttpConfig();
+		config.setHost("127.0.0.1");
+        config.setPort(8086);
+        config.setDatabase("db");
+		
+		final InfluxdbHttp influxdb = new InfluxdbHttp(config); // http transport
+		
+		// final InfluxdbUdp influxdb = new InfluxdbUdp("127.0.0.1", 8089); // udp transport
+		
+		influxdb.setDebug(true); // to log processing series
+		
+		influxdb.addTag("application", "app"); // only for 0.9.1+
+        influxdb.addTag("instance", "instance1");
+		
 		final InfluxdbReporter reporter = InfluxdbReporter
 				.forRegistry(registry)
 				.prefixedWith("test")
@@ -28,6 +40,7 @@ The library provide a lighter client than influxdb-java to push only metrics.
 		reporter.start(10, TimeUnit.SECONDS);
 		return reporter;
 	}
+```
 
 <p xmlns:dct="http://purl.org/dc/terms/">
   <a rel="license"
@@ -42,7 +55,4 @@ The library provide a lighter client than influxdb-java to push only metrics.
   has waived all copyright and related or neighboring rights to
   this work.
 </p>
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/davidB/metrics-influxdb/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

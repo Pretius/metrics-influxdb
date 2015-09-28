@@ -3,8 +3,8 @@ package sandbox;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
-import metrics_influxdb.InfluxdbReporter;
-import metrics_influxdb.InfluxdbUdp;
+import com.pretius.metrics_influxdb.InfluxdbReporter;
+import com.pretius.metrics_influxdb.InfluxdbUdp;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,4 +1,4 @@
-package metrics_influxdb;
+package com.pretius.metrics_influxdb;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

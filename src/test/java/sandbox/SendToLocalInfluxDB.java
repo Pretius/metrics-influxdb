@@ -14,8 +14,9 @@ package sandbox;
 
 import java.util.concurrent.TimeUnit;
 
-import metrics_influxdb.InfluxdbHttp;
-import metrics_influxdb.InfluxdbReporter;
+import com.pretius.metrics_influxdb.InfluxdbHttp;
+import com.pretius.metrics_influxdb.InfluxdbHttpConfig;
+import com.pretius.metrics_influxdb.InfluxdbReporter;
 
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.Gauge;
@@ -23,6 +24,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
+import com.pretius.metrics_influxdb.InfluxdbVersion;
 
 public class SendToLocalInfluxDB {
 
@@ -71,8 +73,15 @@ public class SendToLocalInfluxDB {
   }
 
 private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) throws Exception {
-    final InfluxdbHttp influxdb = new InfluxdbHttp("127.0.0.1", 8086, "dev", "u0", "u0PWD");
-    //influxdb.debugJson = true;
+    final InfluxdbHttpConfig config = new InfluxdbHttpConfig();
+    config.setHost("127.0.0.1");
+    config.setPort(8086);
+    config.setDatabase("dev");
+    config.setUserName("u0");
+    config.setPassword("u0PWD");
+    config.setVersion(InfluxdbVersion.VERSION_0_8);
+    final InfluxdbHttp influxdb = new InfluxdbHttp(config);
+    influxdb.setDebug(true);
     final InfluxdbReporter reporter = InfluxdbReporter
         .forRegistry(registry)
         .prefixedWith("test")

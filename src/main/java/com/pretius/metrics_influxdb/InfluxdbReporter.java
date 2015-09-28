@@ -10,7 +10,7 @@
 //
 //	You should have received a copy of the CC0 Public Domain Dedication along with
 //	this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-package metrics_influxdb;
+package com.pretius.metrics_influxdb;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -42,16 +42,16 @@ import com.codahale.metrics.Timer;
 public class InfluxdbReporter extends ScheduledReporter {
 	private static String[] COLUMNS_TIMER = {
 		"time", "count"
-		, "min", "max", "mean", "std-dev"
-		, "50-percentile", "75-percentile", "95-percentile", "99-percentile", "999-percentile"
-		, "one-minute", "five-minute", "fifteen-minute", "mean-rate"
-		, "run-count"
+		, "min", "max", "mean", "std_dev"
+		, "percentile_50", "percentile_75", "percentile_95", "percentile_99", "percentile_999"
+		, "one_minute", "five_minute", "fifteen_minute", "mean_rate"
+		, "run_count"
 	};
 	private static String[] COLUMNS_HISTOGRAM = {
 		"time", "count"
-		, "min", "max", "mean", "std-dev"
-		, "50-percentile", "75-percentile", "95-percentile", "99-percentile", "999-percentile"
-		, "run-count"
+		, "min", "max", "mean", "std_dev"
+		, "percentile_50", "percentile_75", "percentile_95", "percentile_99", "percentile_999"
+		, "run_count"
 	};
 	private static String[] COLUMNS_COUNT = {
 		"time", "count"
@@ -61,7 +61,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 	};
 	private static String[] COLUMNS_METER = {
 		"time", "count"
-		, "one-minute", "five-minute", "fifteen-minute", "mean-rate"
+		, "one_minute", "five_minute", "fifteen_minute", "mean_rate"
 	};
 
 	/**
@@ -96,7 +96,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 			this.rateUnit = TimeUnit.SECONDS;
 			this.durationUnit = TimeUnit.MILLISECONDS;
 			this.filter = MetricFilter.ALL;
-		}
+        }
 
 		/**
 		 * Use the given {@link Clock} instance for the time.
@@ -292,7 +292,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 			}
 
 			if (influxdb.hasSeriesData()) {
-				influxdb.sendRequest(true, false);
+				influxdb.sendRequest();
 			}
 		} catch (Exception e) {
 			LOGGER.warn("Unable to report to InfluxDB. Discarding data.", e);
@@ -305,7 +305,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 		}
 		final Snapshot snapshot = timer.getSnapshot();
 		Object[] p = pointsTimer[0];
-		p[0] = influxdb.convertTimestamp(timestamp);
+		p[0] = timestamp;
 		p[1] = snapshot.size();
 		p[2] = convertDuration(snapshot.getMin());
 		p[3] = convertDuration(snapshot.getMax());
@@ -331,7 +331,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 		}
 		final Snapshot snapshot = histogram.getSnapshot();
 		Object[] p = pointsHistogram[0];
-		p[0] = influxdb.convertTimestamp(timestamp);
+		p[0] = timestamp;
 		p[1] = snapshot.size();
 		p[2] = snapshot.getMin();
 		p[3] = snapshot.getMax();
@@ -349,7 +349,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 
 	private void reportCounter(String name, Counter counter, long timestamp) {
 		Object[] p = pointsCounter[0];
-		p[0] = influxdb.convertTimestamp(timestamp);
+		p[0] = timestamp;
 		p[1] = counter.getCount();
 		assert (p.length == COLUMNS_COUNT.length);
 		influxdb.appendSeries(prefix, name, ".count", COLUMNS_COUNT, pointsCounter);
@@ -357,7 +357,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 
 	private void reportGauge(String name, Gauge<?> gauge, long timestamp) {
 		Object[] p = pointsGauge[0];
-		p[0] = influxdb.convertTimestamp(timestamp);
+		p[0] = timestamp;
 		p[1] = gauge.getValue();
 		assert (p.length == COLUMNS_GAUGE.length);
 		influxdb.appendSeries(prefix, name, ".value", COLUMNS_GAUGE, pointsGauge);
@@ -368,7 +368,7 @@ public class InfluxdbReporter extends ScheduledReporter {
 			return;
 		}
 		Object[] p = pointsMeter[0];
-		p[0] = influxdb.convertTimestamp(timestamp);
+		p[0] = timestamp;
 		p[1] = meter.getCount();
 		p[2] = convertRate(meter.getOneMinuteRate());
 		p[3] = convertRate(meter.getFiveMinuteRate());
@@ -377,33 +377,6 @@ public class InfluxdbReporter extends ScheduledReporter {
 		assert (p.length == COLUMNS_METER.length);
 		influxdb.appendSeries(prefix, name, ".meter", COLUMNS_METER, pointsMeter);
 	}
-
-	// private String format(Object o) {
-	// if (o instanceof Float) {
-	// return format(((Float) o).doubleValue());
-	// } else if (o instanceof Double) {
-	// return format(((Double) o).doubleValue());
-	// } else if (o instanceof Byte) {
-	// return format(((Byte) o).longValue());
-	// } else if (o instanceof Short) {
-	// return format(((Short) o).longValue());
-	// } else if (o instanceof Integer) {
-	// return format(((Integer) o).longValue());
-	// } else if (o instanceof Long) {
-	// return format(((Long) o).longValue());
-	// }
-	// return null;
-	// }
-	// private String format(long n) {
-	// return Long.toString(n);
-	// }
-	//
-	// private String format(double v) {
-	// // the Carbon plaintext format is pretty underspecified, but it seems like
-	// it just wants
-	// // US-formatted digits
-	// return String.format(Locale.US, "%2.2f", v);
-	// }
 
 	/**
 	 * Returns true if this metric is idle and should be skipped.
