@@ -1,6 +1,4 @@
-.cache
-.classpath
-.project
-.settings
+.*
 target
 bin
+*.iml
