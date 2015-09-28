@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/olejnikk/metrics-influxdb.svg?branch=master)](https://travis-ci.org/olejnikk/metrics-influxdb)
+
 Fork of [davidB](https://github.com/davidB/metrics-influxdb) library enabling support for InfluxDB v0.9.1+
 
 The library provide
@@ -11,6 +13,19 @@ The library provide a lighter client than influxdb-java to push only metrics.
 
 * slf4j-api for logging.
 * metrics-core, to provide, if you use InfluxdbReporter.
+
+## Installation & dependency
+```
+mvn clean install
+```
+
+```xml
+<dependency>
+	<groupId>com.pretius</groupId>
+	<artifactId>metrics-influxdb</artifactId>
+	<version>0.9-SNAPSHOT</version>
+</dependency>
+```
 
 ## Usage samples
 ```java
