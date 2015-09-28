@@ -14,32 +14,32 @@ The library provide a lighter client than influxdb-java to push only metrics.
 
 ## Usage samples
 ```java
-	private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) throws Exception {
-		InfluxdbHttpConfig config = new InfluxdbHttpConfig();
-		config.setHost("127.0.0.1");
-        config.setPort(8086);
-        config.setDatabase("db");
-		
-		final InfluxdbHttp influxdb = new InfluxdbHttp(config); // http transport
-		
-		// final InfluxdbUdp influxdb = new InfluxdbUdp("127.0.0.1", 8089); // udp transport
-		
-		influxdb.setDebug(true); // to log processing series
-		
-		influxdb.addTag("application", "app"); // only for 0.9.1+
-        influxdb.addTag("instance", "instance1");
-		
-		final InfluxdbReporter reporter = InfluxdbReporter
-				.forRegistry(registry)
-				.prefixedWith("test")
-				.convertRatesTo(TimeUnit.SECONDS)
-				.convertDurationsTo(TimeUnit.MILLISECONDS)
-				.filter(MetricFilter.ALL)
-				.skipIdleMetrics(true) // Only report metrics that have changed.
-				.build(influxdb);
-		reporter.start(10, TimeUnit.SECONDS);
-		return reporter;
-	}
+private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) throws Exception {
+	InfluxdbHttpConfig config = new InfluxdbHttpConfig();
+	config.setHost("127.0.0.1");
+	config.setPort(8086);
+	config.setDatabase("db");
+	
+	final InfluxdbHttp influxdb = new InfluxdbHttp(config); // http transport
+	
+	// final InfluxdbUdp influxdb = new InfluxdbUdp("127.0.0.1", 8089); // udp transport
+	
+	influxdb.setDebug(true); // to log processing series
+	
+	influxdb.addTag("application", "app"); // only for 0.9.1+
+	influxdb.addTag("instance", "instance1");
+	
+	final InfluxdbReporter reporter = InfluxdbReporter
+			.forRegistry(registry)
+			.prefixedWith("test")
+			.convertRatesTo(TimeUnit.SECONDS)
+			.convertDurationsTo(TimeUnit.MILLISECONDS)
+			.filter(MetricFilter.ALL)
+			.skipIdleMetrics(true) // Only report metrics that have changed.
+			.build(influxdb);
+	reporter.start(10, TimeUnit.SECONDS);
+	return reporter;
+}
 ```
 
 <p xmlns:dct="http://purl.org/dc/terms/">
