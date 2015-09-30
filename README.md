@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/olejnikk/metrics-influxdb.svg?branch=master)](https://travis-ci.org/olejnikk/metrics-influxdb)
-
 Fork of [davidB](https://github.com/davidB/metrics-influxdb) library enabling support for InfluxDB v0.9.1+
 
 The library provide
