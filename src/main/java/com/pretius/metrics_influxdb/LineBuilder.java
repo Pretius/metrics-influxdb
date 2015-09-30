@@ -57,7 +57,7 @@ public class LineBuilder implements SeriesBuilder {
                 Iterator<Map.Entry<String, String>> iter = tags.entrySet().iterator();
                 int j = 0;
                 while (iter.hasNext()) {
-                    if (j++ == 0) {
+                    if (j++ < tags.size()) {
                         lines.append(',');
                     }
                     Map.Entry<String, String> entry = iter.next();
