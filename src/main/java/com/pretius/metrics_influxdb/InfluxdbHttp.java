@@ -120,4 +120,9 @@ public class InfluxdbHttp extends Influxdb {
     public void suppressExceptions(boolean suppressExceptions) {
         this.suppressExceptions = suppressExceptions;
     }
+
+    @Override
+    public long convertTimestamp(long timestamp) {
+        return timestamp;
+    }
 }

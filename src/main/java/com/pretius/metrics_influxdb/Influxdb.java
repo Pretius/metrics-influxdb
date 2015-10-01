@@ -54,4 +54,6 @@ public abstract class Influxdb {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
+
+    public abstract long convertTimestamp(long timestamp);
 }

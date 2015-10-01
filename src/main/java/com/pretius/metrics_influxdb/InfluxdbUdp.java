@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class InfluxdbUdp extends Influxdb {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InfluxdbHttp.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InfluxdbUdp.class);
     private boolean suppressExceptions = true;
     protected final ArrayList<SeriesBuilder> seriesBuilders;
     private final String host;
@@ -81,5 +81,13 @@ public class InfluxdbUdp extends Influxdb {
     @Override
     public void suppressExceptions(boolean suppressExceptions) {
         this.suppressExceptions = suppressExceptions;
+    }
+
+    @Override
+    public long convertTimestamp(long timestamp) {
+        if (version.equals(InfluxdbVersion.VERSION_0_8)) {
+            return timestamp / 1000; // when sending timestamps over udp, they must be in seconds https://github.com/influxdb/influxdb/issues/841
+        }
+        return timestamp * 1000000; // nanos for 0.9 https://influxdb.com/docs/v0.9/write_protocols/write_syntax.html#timestamps
     }
 }

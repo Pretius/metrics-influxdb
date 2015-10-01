@@ -12,6 +12,8 @@ public class InfluxdbHttpConfig {
     private TimeUnit timePrecision = TimeUnit.MILLISECONDS;
     private InfluxdbVersion version = InfluxdbVersion.VERSION_0_9;
 
+
+
     public String getHost() {
         return host;
     }
