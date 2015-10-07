@@ -25,7 +25,7 @@ mvn clean install
 </dependency>
 ```
 
-## Usage samples
+## Usage sample
 ```java
 private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) throws Exception {
 	InfluxdbHttpConfig config = new InfluxdbHttpConfig();
@@ -54,6 +54,24 @@ private static InfluxdbReporter startInfluxdbReporter(MetricRegistry registry) t
 	return reporter;
 }
 ```
+
+## Field names change
+To avoid wrapping in double quotes in queries, field names now starts with letter and doesn't contain dashes.
+The change affects following fields:
+
+| old name | new name |
+| -------- | -------- |
+| std-dev | std_dev |
+| 50-percentile | percentile_50 |
+| 75-percentile | percentile_75 |
+| 95-percentile | percentile_95 |
+| 99-percentile | percentile_99 |
+| 999-percentile | percentile_999 |
+| one-minute | one_minute |
+| five-minute | five_minute |
+| fifteen-minute | fifteen_minute |
+| mean-rate | mean_rate |
+| run-count | run_count |
 
 <p xmlns:dct="http://purl.org/dc/terms/">
   <a rel="license"
